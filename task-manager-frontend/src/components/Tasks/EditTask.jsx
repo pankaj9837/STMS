@@ -17,25 +17,7 @@ const EditTask = () => {
   const [error, setError] = useState("");
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        const res = await axios.get(`/tasks/${id}`);
-        const { title, description, dueDate, priority,assignedTo } = res.data;
-        setTask({
-          title,
-          description,
-          dueDate: dueDate.slice(0, 10), // Format for <input type="date">
-          priority,
-          assignedTo,
-        });
-      } catch (err) {
-        setError("Failed to fetch task");
-      }
-    };
 
-    fetchTask();
-  }, [id]);
 
    const fetchUsers = async () => {
     try {
@@ -64,6 +46,27 @@ const EditTask = () => {
       setError("Task update failed");
     }
   };
+
+    useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const res = await axios.get(`/tasks/${id}`);
+        console.log(res.data)
+        const { title, description, dueDate, priority } = res.data;
+        setTask({
+          title,
+          description,
+          dueDate: dueDate.slice(0, 10), // Format for <input type="date">
+          priority,
+          assignedTo:res.data.assignedTo._id,
+        });
+      } catch (err) {
+        setError("Failed to fetch task");
+      }
+    };
+
+    fetchTask();
+  }, [id]);
 
   return (
     <div style={{ padding: "2rem", maxWidth: "600px", margin: "auto" }}>

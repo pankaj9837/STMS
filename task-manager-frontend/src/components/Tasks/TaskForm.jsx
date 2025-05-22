@@ -38,6 +38,7 @@ const TaskForm = () => {
     e.preventDefault();
     try {
       await axios.post("/tasks", task);
+      alert('Task Added Succesfully')
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.msg || "Task creation failed");

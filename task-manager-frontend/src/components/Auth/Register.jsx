@@ -6,13 +6,14 @@ import { AuthContext } from "../../context/AuthContext";
 const Register = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const [form, setForm] = useState({
+  const intial_state={
     name: "",
     email: "",
     password: "",
-    role:"admin"
-  });
+    role:"user"
+  }
+
+  const [form, setForm] = useState(intial_state);
 
   const [error, setError] = useState("");
 
@@ -24,8 +25,9 @@ const Register = () => {
     try {
       const res = await axios.post("/auth/register", form);
       console.log(res)
-      login(res.data.user, res.data.token);
-      navigate("/");
+      // login(res.data.user, res.data.token);
+      alert('New user Registered')
+      setForm(intial_state)
     } catch (err) {
       setError(err.response?.data?.msg || "Registration failed");
     }

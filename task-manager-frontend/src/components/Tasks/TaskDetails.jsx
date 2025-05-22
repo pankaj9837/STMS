@@ -49,6 +49,7 @@ const currentUser = JSON.parse(localStorage.getItem("user"));
   return (
     <div style={{ padding: "2rem", maxWidth: "600px", margin: "auto" }}>
       <h2>{task.title}</h2>
+      <p><strong>Assigned To:</strong> {task?.assignedTo?.email}</p>
       <p><strong>Description:</strong> {task.description}</p>
       <p><strong>Due Date:</strong> {new Date(task.dueDate).toLocaleDateString()}</p>
       <p><strong>Status:</strong> {task.status}</p>

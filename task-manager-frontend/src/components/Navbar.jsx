@@ -1,7 +1,11 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const currentUser = JSON.parse(localStorage.getItem("user"));
+  const { logout } = useContext(AuthContext);
+  console.log(currentUser)
   return (
     <nav
       style={{
@@ -16,15 +20,15 @@ const Navbar = () => {
       <h1 style={{ margin: 0, fontWeight: "bold", fontSize: "1.5rem" }}>
         Task Manager
       </h1>
-
-      <div style={{ display: "flex", gap: "1rem" }}>
+{
+      currentUser&&<div style={{ display: "flex", gap: "1rem" }}>
         <Link
           to="/"
           style={{ color: "white", textDecoration: "none", fontWeight: "500" }}
         >
           Tasks
         </Link>
-        {currentUser.role==='admin'&&<><Link
+        {(currentUser&&currentUser.role==='admin')&&<><Link
           to="/admin"
           style={{ color: "white", textDecoration: "none", fontWeight: "500" }}
         >
@@ -36,7 +40,10 @@ const Navbar = () => {
         >
           Register
         </Link></>}
-      </div>
+        <span onClick={()=>logout()} style={{ color: "white", textDecoration: "none", fontWeight: "500" }}>
+          Logout
+        </span>
+      </div>}
     </nav>
   );
 };

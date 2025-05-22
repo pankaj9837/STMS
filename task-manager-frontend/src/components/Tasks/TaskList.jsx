@@ -6,10 +6,14 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [users, setUsers] = useState([]);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
 
   const fetchTasks = async () => {
     try {
       const res = await axios.get(`/tasks?page=${page}`);
+      console.log(tasks)
       setTasks(res.data.tasks);
       setTotalPages(res.data.totalPages);
     } catch (err) {
@@ -42,12 +46,32 @@ const TaskList = () => {
     if (page > 1) setPage(page - 1);
   };
 
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(`/users`);
+      console.log(res.data)
+      setUsers(res.data);
+    } catch (err) {
+      console.error("Failed to fetch users:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const searchuser=(id)=>{
+    return users.find(item=>item._id===id)?.email||" "
+  }
+
+
   return (
     <div style={{ padding: "2rem" }}>
       <h2 style={{ marginBottom: "1rem" }}>Task List</h2>
-      <Link to="/tasks/new">
+      {(currentUser&&currentUser.role==='admin')&&<Link to="/tasks/new">
         <button style={{ marginBottom: "1rem", padding: "0.5rem 1rem" }}>+ Add Task</button>
-      </Link>
+      </Link>}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
         {tasks.map((task) => (
@@ -62,6 +86,7 @@ const TaskList = () => {
             }}
           >
             <h3>{task.title}</h3>
+            <p><strong>Assigned To:</strong>{searchuser(task?.assignedTo)}</p>
             <p><strong>Due:</strong> {new Date(task.dueDate).toLocaleDateString()}</p>
             <p><strong>Status:</strong> {task.status}</p>
             <p>
